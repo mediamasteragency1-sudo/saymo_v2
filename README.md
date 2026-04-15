@@ -104,19 +104,6 @@ GET    /api/psychology/recommendations/
 
 ---
 
-## Variables d'environnement
-
-```env
-SECRET_KEY=your-secret-key
-DEBUG=True
-DB_NAME=saymo_db
-DB_USER=root
-DB_PASSWORD=yourpassword
-DB_HOST=localhost
-DB_PORT=3306
-CORS_ALLOWED_ORIGINS=http://localhost:5173
-```
-
 ---
 
 ## Profils psychologiques
