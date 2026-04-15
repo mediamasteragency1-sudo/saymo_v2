@@ -1,0 +1,133 @@
+.listings-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.listings-sidebar {
+  position: sticky;
+  top: 90px;
+}
+
+.sidebar-section {
+  background: var(--color-surface);
+  border: 0.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sidebar-title {
+  font-size: 16px;
+  font-weight: 600;
+  padding-bottom: 16px;
+  border-bottom: 0.5px solid var(--color-border);
+}
+
+.price-range {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.sidebar-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 0.5px solid var(--color-border);
+}
+
+.listings-main {
+  min-width: 0;
+}
+
+.listings-header {
+  margin-bottom: 32px;
+}
+
+.listings-title {
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.listings-subtitle {
+  color: var(--color-muted);
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.listings-empty {
+  text-align: center;
+  padding: 80px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  color: var(--color-muted);
+}
+
+/* Skeleton */
+.skeleton-card {
+  background: var(--color-surface);
+  border: 0.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.skeleton-image {
+  width: 100%;
+  aspect-ratio: 4/3;
+}
+
+.skeleton-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.skeleton-line {
+  height: 14px;
+  border-radius: 3px;
+  width: 100%;
+}
+
+.skeleton-line.short { width: 40%; }
+.skeleton-line.medium { width: 65%; }
+
+@media (max-width: 1024px) {
+  .listings-layout {
+    grid-template-columns: 240px 1fr;
+    gap: 24px;
+  }
+}
+
+.listings-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 0.5px solid var(--color-border);
+}
+
+.pagination-info {
+  font-size: 13px;
+  color: var(--color-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 768px) {
+  .listings-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .listings-sidebar {
+    position: static;
+  }
+}

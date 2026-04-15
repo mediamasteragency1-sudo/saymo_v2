@@ -1,0 +1,126 @@
+.admin-reports-header {
+  margin-bottom: 32px;
+}
+
+.reports-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.report-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 20px 24px;
+}
+
+.report-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.report-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.reason-badge {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 100px;
+  background: var(--color-highlight);
+  color: var(--color-primary);
+  border: 0.5px solid var(--color-border);
+}
+
+.reason-badge.reason-fraud,
+.reason-badge.reason-inappropriate {
+  background: #FEF2F2;
+  color: #991B1B;
+  border-color: #FECACA;
+}
+
+.reason-badge.reason-spam {
+  background: #FFF8E7;
+  color: #92400E;
+  border-color: #F0D060;
+}
+
+.report-id {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-muted);
+}
+
+.report-date {
+  font-size: 11px;
+  color: var(--color-muted);
+  margin-left: auto;
+}
+
+.report-from {
+  font-size: 13px;
+  color: var(--color-primary);
+  line-height: 1.5;
+}
+
+.report-desc {
+  font-size: 13px;
+  color: var(--color-muted);
+  font-style: italic;
+  padding: 10px 14px;
+  background: var(--color-bg);
+  border-radius: var(--radius-sm);
+  border-left: 2px solid var(--color-border);
+  line-height: 1.6;
+}
+
+.report-note-wrap {
+  margin-top: 4px;
+}
+
+.report-note-input {
+  width: 100%;
+  resize: vertical;
+  font-size: 13px;
+}
+
+.report-admin-note {
+  font-size: 12px;
+  color: var(--color-muted);
+  font-style: italic;
+  padding: 8px 12px;
+  background: var(--color-highlight);
+  border-radius: var(--radius-sm);
+}
+
+.report-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
+  min-width: 100px;
+}
+
+@media (max-width: 768px) {
+  .report-card {
+    flex-direction: column;
+  }
+
+  .report-actions {
+    flex-direction: row;
+    width: 100%;
+  }
+
+  .report-date {
+    margin-left: 0;
+  }
+}

@@ -1,0 +1,255 @@
+.avail-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+.avail-layout {
+  display: grid;
+  grid-template-columns: auto 280px;
+  gap: 24px;
+  align-items: start;
+}
+
+/* Calendar */
+.avail-calendar {
+  padding: 32px;
+  width: fit-content;
+}
+
+.cal-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.cal-nav-btn {
+  width: 32px;
+  height: 32px;
+  border: 0.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: var(--color-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition);
+}
+
+.cal-nav-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.cal-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.cal-grid-header {
+  display: grid;
+  grid-template-columns: repeat(7, 44px);
+  gap: 2px;
+  margin-bottom: 4px;
+}
+
+.cal-day-label {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  padding: 4px 0;
+}
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 44px);
+  gap: 2px;
+}
+
+.cal-day {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+  border: 0.5px solid transparent;
+  background: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--color-primary);
+  transition: all var(--transition);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cal-day:hover:not(.past) {
+  border-color: var(--color-primary);
+  background: var(--color-highlight);
+}
+
+.cal-day.today {
+  font-weight: 700;
+  border-color: var(--color-primary);
+}
+
+.cal-day.available {
+  background: #EDFAF4;
+  border-color: #6EE7B7;
+  color: #065F46;
+}
+
+.cal-day.blocked {
+  background: #FEF2F2;
+  border-color: #FECACA;
+  color: #991B1B;
+  text-decoration: line-through;
+}
+
+.cal-day.past {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.cal-day.in-range {
+  background: var(--color-highlight);
+  border-color: var(--color-primary);
+}
+
+.cal-day.range-start,
+.cal-day.range-end {
+  background: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+}
+
+/* Legend */
+.cal-legend {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 20px;
+  font-size: 12px;
+  color: var(--color-muted);
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 4px;
+}
+
+.legend-dot.available { background: #6EE7B7; }
+.legend-dot.blocked   { background: #FECACA; }
+.legend-dot.neutral   { background: var(--color-border); }
+
+/* Actions panel */
+.avail-actions-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.avail-action-card,
+.avail-info-card {
+  padding: 24px;
+}
+
+.avail-action-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+
+.avail-action-hint {
+  font-size: 13px;
+  color: var(--color-muted);
+  line-height: 1.6;
+}
+
+.avail-range-display {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.avail-range-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.avail-range-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.avail-range-value {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.avail-range-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.avail-notice {
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--color-muted);
+  padding: 8px 12px;
+  background: var(--color-highlight);
+  border-radius: var(--radius-sm);
+}
+
+.avail-how-list {
+  font-size: 13px;
+  color: var(--color-muted);
+  line-height: 1.8;
+  padding-left: 18px;
+  margin-bottom: 12px;
+}
+
+.avail-how-note {
+  font-size: 12px;
+  color: var(--color-muted);
+  font-style: italic;
+  line-height: 1.6;
+}
+
+@media (max-width: 1024px) {
+  .avail-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .avail-calendar {
+    width: 100%;
+  }
+
+  .cal-grid,
+  .cal-grid-header {
+    grid-template-columns: repeat(7, 1fr);
+  }
+
+  .cal-day {
+    width: 100%;
+    height: 40px;
+  }
+}
