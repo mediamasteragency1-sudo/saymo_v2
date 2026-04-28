@@ -116,6 +116,9 @@ export default function Navbar() {
               Pour vous
             </Link>
           )}
+          <Link to="/about" className={`navbar-link ${isActive('/about') ? 'active' : ''}`}>
+            À propos
+          </Link>
         </div>
 
         <div className="navbar-actions">
@@ -189,6 +192,7 @@ export default function Navbar() {
                         <hr className="profile-menu-divider" />
                         <Link to="/admin/dashboard"   className="profile-menu-item" onClick={() => setMenuOpen(false)}>Administration</Link>
                         <Link to="/admin/properties"  className="profile-menu-item" onClick={() => setMenuOpen(false)}>Modération</Link>
+                        <Link to="/admin/reviews"     className="profile-menu-item" onClick={() => setMenuOpen(false)}>Avis</Link>
                         <Link to="/admin/reports"     className="profile-menu-item" onClick={() => setMenuOpen(false)}>Signalements</Link>
                       </>
                     )}

@@ -5,6 +5,8 @@ import { createBooking } from '../../api/bookings'
 import { addFavorite, getFavorites, removeFavorite } from '../../api/favorites'
 import { getReviews } from '../../api/reviews'
 import { useAuth } from '../../context/AuthContext'
+import ReportForm from '../../components/reports/ReportForm'
+import PaymentModal from '../../components/payment/PaymentModal'
 import './PropertyDetail.css'
 
 function Stars({ rating, size = 14 }) {
@@ -28,6 +30,9 @@ export default function PropertyDetail() {
   const [favoriteId, setFavoriteId] = useState(null)
   const [activeImage, setActiveImage] = useState(0)
 
+  const [showReport, setShowReport] = useState(false)
+  const [pendingBooking, setPendingBooking]     = useState(null)
+  const [clientSecret, setClientSecret]         = useState('')
   const [booking, setBooking] = useState({ start_date: '', end_date: '', guests: 1, message: '' })
   const [bookingLoading, setBookingLoading] = useState(false)
   const [bookingError, setBookingError] = useState('')
@@ -62,8 +67,9 @@ export default function PropertyDetail() {
     setBookingLoading(true)
     setBookingError('')
     try {
-      await createBooking({ property: parseInt(id), ...booking })
-      setBookingSuccess(true)
+      const { data } = await createBooking({ property: parseInt(id), ...booking })
+      setPendingBooking(data)
+      setClientSecret(data.client_secret)
     } catch (err) {
       const data = err.response?.data
       setBookingError(
@@ -148,13 +154,24 @@ export default function PropertyDetail() {
                   <span>{property.num_bathrooms} sdb.</span>
                 </div>
               </div>
-              <button className={`favorite-btn ${favoriteId ? 'active' : ''}`} onClick={handleFavorite}>
-                <svg width="22" height="22" viewBox="0 0 24 24"
-                  fill={favoriteId ? 'currentColor' : 'none'}
-                  stroke="currentColor" strokeWidth="1.5">
-                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                </svg>
-              </button>
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                <button className={`favorite-btn ${favoriteId ? 'active' : ''}`} onClick={handleFavorite}>
+                  <svg width="22" height="22" viewBox="0 0 24 24"
+                    fill={favoriteId ? 'currentColor' : 'none'}
+                    stroke="currentColor" strokeWidth="1.5">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                  </svg>
+                </button>
+                {user && (
+                  <button
+                    className="btn btn-ghost btn-sm"
+                    style={{ fontSize: 12, color: 'var(--color-muted)' }}
+                    onClick={() => setShowReport(true)}
+                  >
+                    Signaler
+                  </button>
+                )}
+              </div>
             </div>
 
             <hr className="divider" />
@@ -320,6 +337,28 @@ export default function PropertyDetail() {
           </div>
         </div>
       </div>
+      {showReport && (
+        <ReportForm
+          propertyId={parseInt(id)}
+          onClose={() => setShowReport(false)}
+        />
+      )}
+
+      {pendingBooking && clientSecret && (
+        <PaymentModal
+          booking={pendingBooking}
+          clientSecret={clientSecret}
+          onSuccess={() => {
+            setPendingBooking(null)
+            setClientSecret('')
+            setBookingSuccess(true)
+          }}
+          onClose={() => {
+            setPendingBooking(null)
+            setClientSecret('')
+          }}
+        />
+      )}
     </div>
   )
 }

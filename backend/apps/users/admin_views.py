@@ -52,8 +52,7 @@ def admin_analytics(request):
     active_properties = Property.objects.filter(is_active=True).count()
     total_bookings = Booking.objects.count()
     recent_bookings = Booking.objects.filter(created_at__gte=thirty_days_ago).count()
-    confirmed_bookings = Booking.objects.filter(status='confirmed')
-    total_revenue = confirmed_bookings.aggregate(Sum('total_price'))['total_price__sum'] or 0
+    total_revenue = Booking.objects.exclude(status='cancelled').aggregate(Sum('total_price'))['total_price__sum'] or 0
 
     bookings_by_month = []
     for i in range(6):

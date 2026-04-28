@@ -18,6 +18,7 @@ class Booking(models.Model):
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     guests = models.PositiveIntegerField(default=1)
     message = models.TextField(blank=True)
+    stripe_payment_intent_id = models.CharField(max_length=200, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

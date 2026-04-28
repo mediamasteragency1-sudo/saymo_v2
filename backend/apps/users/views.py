@@ -4,6 +4,11 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.core.mail import send_mail
+from django.conf import settings
 
 from .models import User
 from .serializers import RegisterSerializer, LoginSerializer, UserSerializer, UserUpdateSerializer
@@ -52,6 +57,51 @@ def logout(request):
         return Response({'message': 'Déconnexion réussie.'})
     except TokenError:
         return Response({'error': 'Token invalide.'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def forgot_password(request):
+    email = request.data.get('email', '').strip().lower()
+    try:
+        user = User.objects.get(email=email)
+        uid   = urlsafe_base64_encode(force_bytes(user.pk))
+        token = default_token_generator.make_token(user)
+        reset_url = f"{settings.FRONTEND_URL}/reset-password/{uid}/{token}"
+        send_mail(
+            subject='Réinitialisation de votre mot de passe SAYMO',
+            message=f'Cliquez sur ce lien pour réinitialiser votre mot de passe :\n\n{reset_url}\n\nCe lien expire dans 24 h.',
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[user.email],
+            fail_silently=False,
+        )
+    except User.DoesNotExist:
+        pass  # Don't reveal whether the email exists
+    return Response({'detail': 'Si cette adresse existe, un e-mail a été envoyé.'})
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def reset_password(request):
+    uid_b64  = request.data.get('uid', '')
+    token    = request.data.get('token', '')
+    password = request.data.get('password', '')
+
+    try:
+        uid  = force_str(urlsafe_base64_decode(uid_b64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, User.DoesNotExist):
+        return Response({'error': 'Lien invalide.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    if not default_token_generator.check_token(user, token):
+        return Response({'error': 'Lien expiré ou invalide.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    if len(password) < 8:
+        return Response({'error': 'Le mot de passe doit contenir au moins 8 caractères.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    user.set_password(password)
+    user.save()
+    return Response({'detail': 'Mot de passe réinitialisé avec succès.'})
 
 
 @api_view(['GET', 'PUT'])

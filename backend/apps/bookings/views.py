@@ -3,13 +3,17 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.utils import timezone
+from django.conf import settings
 
+import stripe
 from datetime import timedelta
 from .models import Booking
 from .serializers import BookingSerializer, BookingCreateSerializer
 from apps.notifications.utils import create_notification
 from apps.messaging.models import Message
 from apps.properties.models import Availability
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 @api_view(['GET', 'POST'])
@@ -31,8 +35,6 @@ def bookings_list(request):
         # Auto-update completed bookings
         _update_completed_bookings()
 
-        # Si le voyageur a écrit un message lors de la réservation,
-        # le créer comme premier message du thread de messagerie
         if booking.message and booking.message.strip():
             Message.objects.create(
                 booking=booking,
@@ -40,19 +42,32 @@ def bookings_list(request):
                 content=booking.message.strip(),
             )
 
-        # Notifications
+        # Créer le PaymentIntent Stripe
+        try:
+            intent = stripe.PaymentIntent.create(
+                amount=int(booking.total_price * 100),  # centimes
+                currency='eur',
+                metadata={
+                    'booking_id': booking.id,
+                    'user_id':    request.user.id,
+                },
+            )
+            booking.stripe_payment_intent_id = intent.id
+            booking.save(update_fields=['stripe_payment_intent_id'])
+            client_secret = intent.client_secret
+        except stripe.StripeError as e:
+            booking.delete()
+            return Response({'error': str(e)}, status=status.HTTP_402_PAYMENT_REQUIRED)
+
         create_notification(
             user=request.user,
-            message=f'Votre réservation pour "{booking.property.title}" est en attente de confirmation.',
-            notif_type='booking',
-        )
-        create_notification(
-            user=booking.property.host,
-            message=f'Nouvelle réservation pour "{booking.property.title}" du {booking.start_date} au {booking.end_date}.',
+            message=f'Votre réservation pour "{booking.property.title}" est en attente de paiement.',
             notif_type='booking',
         )
 
-        return Response(BookingSerializer(booking, context={'request': request}).data, status=status.HTTP_201_CREATED)
+        data = BookingSerializer(booking, context={'request': request}).data
+        data['client_secret'] = client_secret
+        return Response(data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -121,6 +136,45 @@ def update_booking_status(request, pk):
             message=f'La réservation de {booking.user.name} pour "{booking.property.title}" a été annulée.',
             notif_type='booking',
         )
+
+    return Response(BookingSerializer(booking, context={'request': request}).data)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def confirm_payment(request, pk):
+    try:
+        booking = Booking.objects.select_related('user', 'property').get(pk=pk)
+    except Booking.DoesNotExist:
+        return Response({'error': 'Réservation introuvable.'}, status=status.HTTP_404_NOT_FOUND)
+
+    if booking.user != request.user:
+        return Response({'error': 'Permission refusée.'}, status=status.HTTP_403_FORBIDDEN)
+
+    if booking.status != 'pending':
+        return Response({'error': 'Cette réservation ne peut plus être confirmée.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        intent = stripe.PaymentIntent.retrieve(booking.stripe_payment_intent_id)
+        if intent.status != 'succeeded':
+            return Response({'error': 'Le paiement n\'a pas encore été validé.'}, status=status.HTTP_402_PAYMENT_REQUIRED)
+    except stripe.StripeError as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    booking.status = 'confirmed'
+    booking.save(update_fields=['status'])
+    _block_booking_dates(booking, is_available=False)
+
+    create_notification(
+        user=booking.user,
+        message=f'Paiement reçu. Votre réservation pour "{booking.property.title}" est confirmée !',
+        notif_type='booking',
+    )
+    create_notification(
+        user=booking.property.host,
+        message=f'Nouvelle réservation confirmée pour "{booking.property.title}" du {booking.start_date} au {booking.end_date}.',
+        notif_type='booking',
+    )
 
     return Response(BookingSerializer(booking, context={'request': request}).data)
 

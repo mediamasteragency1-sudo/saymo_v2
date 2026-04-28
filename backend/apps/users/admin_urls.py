@@ -4,7 +4,7 @@ from apps.properties.admin_views import (
     admin_properties_list, admin_property_detail, admin_moderate_property
 )
 from apps.bookings.admin_views import admin_bookings_list, admin_booking_detail
-from apps.reviews.admin_views import admin_review_delete
+from apps.reviews.admin_views import admin_reviews_list, admin_review_delete
 from apps.reports.views import admin_reports_list, admin_report_resolve
 
 urlpatterns = [
@@ -15,6 +15,7 @@ urlpatterns = [
     path('properties/<int:pk>/moderate/', admin_moderate_property, name='admin-moderate-property'),
     path('bookings/', admin_bookings_list, name='admin-bookings'),
     path('bookings/<int:pk>/', admin_booking_detail, name='admin-booking-detail'),
+    path('reviews/', admin_reviews_list, name='admin-reviews'),
     path('reviews/<int:pk>/', admin_review_delete, name='admin-review-delete'),
     path('analytics/', admin_views.admin_analytics, name='admin-analytics'),
     path('reports/', admin_reports_list, name='admin-reports'),

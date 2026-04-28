@@ -42,6 +42,7 @@ export default function AdminDashboard() {
             <Link to="/admin/users" className="btn btn-ghost btn-sm">Utilisateurs</Link>
             <Link to="/admin/properties" className="btn btn-ghost btn-sm">Logements</Link>
             <Link to="/admin/bookings" className="btn btn-ghost btn-sm">Réservations</Link>
+            <Link to="/admin/reviews" className="btn btn-ghost btn-sm">Avis</Link>
             <Link to="/admin/reports" className="btn btn-ghost btn-sm">Signalements</Link>
           </div>
         </div>

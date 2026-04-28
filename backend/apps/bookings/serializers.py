@@ -60,5 +60,5 @@ class BookingSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'user_name', 'user_email', 'property',
             'start_date', 'end_date', 'nights', 'guests', 'message',
-            'status', 'total_price', 'created_at', 'updated_at',
+            'status', 'total_price', 'stripe_payment_intent_id', 'created_at', 'updated_at',
         ]

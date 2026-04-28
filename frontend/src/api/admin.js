@@ -10,5 +10,6 @@ export const adminGetReports = (status = 'pending') => api.get(`/admin/reports/?
 export const adminResolveReport = (id, data) => api.patch(`/admin/reports/${id}/resolve/`, data)
 export const adminGetBookings = () => api.get('/admin/bookings/')
 export const adminDeleteBooking = (id) => api.delete(`/admin/bookings/${id}/`)
+export const adminGetReviews = () => api.get('/admin/reviews/')
 export const adminDeleteReview = (id) => api.delete(`/admin/reviews/${id}/`)
 export const adminGetAnalytics = () => api.get('/admin/analytics/')

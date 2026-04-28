@@ -75,9 +75,15 @@ export default function HostBookings() {
                     <span className="price" style={{ fontSize: 20 }}>{parseFloat(b.total_price).toFixed(0)} €</span>
                     {b.status === 'pending' && (
                       <div style={{ display: 'flex', gap: 8 }}>
-                        <button className="btn btn-primary btn-sm" onClick={() => handleStatus(b.id, 'confirmed')}>
-                          Confirmer
-                        </button>
+                        {b.stripe_payment_intent_id ? (
+                          <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', padding: '4px 10px', background: '#FFF8E7', color: '#92400E', border: '0.5px solid #F0D060', borderRadius: 2 }}>
+                            Paiement en attente
+                          </span>
+                        ) : (
+                          <button className="btn btn-primary btn-sm" onClick={() => handleStatus(b.id, 'confirmed')}>
+                            Confirmer
+                          </button>
+                        )}
                         <button
                           className="btn btn-sm"
                           style={{ borderColor: 'var(--color-error)', color: 'var(--color-error)' }}

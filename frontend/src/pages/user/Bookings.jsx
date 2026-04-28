@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { getBookings, updateBookingStatus } from '../../api/bookings'
+import ReviewForm from '../../components/reviews/ReviewForm'
 import './Bookings.css'
 
 const STATUS_LABELS = {
@@ -14,6 +15,7 @@ export default function Bookings() {
   const [bookings, setBookings] = useState([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState('all')
+  const [reviewBooking, setReviewBooking] = useState(null)
 
   useEffect(() => {
     getBookings()
@@ -103,12 +105,12 @@ export default function Bookings() {
                           </button>
                         )}
                         {b.status === 'completed' && (
-                          <Link
-                            to={`/listings/${b.property?.id}`}
+                          <button
                             className="btn btn-ghost btn-sm"
+                            onClick={() => setReviewBooking(b)}
                           >
                             Laisser un avis
-                          </Link>
+                          </button>
                         )}
                       </div>
                     </div>
@@ -119,6 +121,19 @@ export default function Bookings() {
           </div>
         )}
       </div>
+
+      {reviewBooking && (
+        <ReviewForm
+          booking={reviewBooking}
+          onSubmit={() => {
+            setBookings(prev => prev.map(b =>
+              b.id === reviewBooking.id ? { ...b, _reviewed: true } : b
+            ))
+            setReviewBooking(null)
+          }}
+          onClose={() => setReviewBooking(null)}
+        />
+      )}
     </div>
   )
 }

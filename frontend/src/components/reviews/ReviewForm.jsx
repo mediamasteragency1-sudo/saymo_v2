@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { createReview } from '../../api/reviews'
 import './ReviewForm.css'
 
@@ -42,7 +43,7 @@ export default function ReviewForm({ booking, onSubmit, onClose }) {
   const LABELS = ['', 'Décevant', 'Passable', 'Bien', 'Très bien', 'Excellent']
   const displayRating = hovered || rating
 
-  return (
+  return createPortal(
     <div className="review-modal-backdrop" onClick={onClose}>
       <div className="review-modal" onClick={e => e.stopPropagation()}>
         <div className="review-modal-header">
@@ -110,6 +111,7 @@ export default function ReviewForm({ booking, onSubmit, onClose }) {
           </div>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }
