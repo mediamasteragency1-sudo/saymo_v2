@@ -48,16 +48,16 @@ const TEAM = [
     bio: 'Passionné de tech et de voyages, Salah a conçu SAYMO pour réconcilier algorithme et émotion dans le voyage.',
   },
   {
-    name: 'Antoine Leroy',
-    role: 'Responsable Hôtes',
+    name: 'Ayoub Tibichte',
+    role: 'Co-Fondateur & Développeur',
     initial: 'A',
-    bio: 'Antoine accompagne nos hôtes au quotidien et s\'assure que chaque logement répond aux standards SAYMO.',
+    bio: "Ayoub apporte son expertise technique et sa créativité pour bâtir une plateforme robuste et intuitive.",
   },
   {
-    name: 'Camille Moreau',
-    role: 'Expérience Voyageur',
-    initial: 'C',
-    bio: 'Camille veille à ce que chaque étape du parcours voyageur soit fluide, intuitive et mémorable.',
+    name: 'Mouncif Elbarki',
+    role: 'Co-Fondateur & Développeur',
+    initial: 'M',
+    bio: "Mouncif pilote la vision produit et s'assure que chaque fonctionnalité répond aux vrais besoins des utilisateurs.",
   },
 ]
 
