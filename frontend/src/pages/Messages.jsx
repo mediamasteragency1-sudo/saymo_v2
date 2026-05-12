@@ -10,7 +10,7 @@ function ConversationItem({ conv, isActive, onClick }) {
       className={`conv-item ${isActive ? 'active' : ''} ${conv.unread_count > 0 ? 'unread' : ''}`}
       onClick={onClick}
     >
-      <div className="conv-avatar">{conv.other_user_name.charAt(0).toUpperCase()}</div>
+      <div className="conv-avatar">{(conv.other_user_name || '?').charAt(0).toUpperCase()}</div>
       <div className="conv-info">
         <div className="conv-header-row">
           <span className="conv-name">{conv.other_user_name}</span>
@@ -84,7 +84,7 @@ export default function Messages() {
     setSending(true)
     try {
       const res = await sendMessage(bookingId, input.trim())
-      setThread(prev => ({ ...prev, messages: [...prev.messages, res.data] }))
+      setThread(prev => prev ? { ...prev, messages: [...(prev.messages || []), res.data] } : prev)
       setInput('')
       setConversations(prev => prev.map(c =>
         c.booking_id === parseInt(bookingId)
@@ -138,9 +138,9 @@ export default function Messages() {
         ) : (
           <>
             <div className="thread-header">
-              <div className="thread-avatar">{thread.other_user.name.charAt(0).toUpperCase()}</div>
+              <div className="thread-avatar">{thread.other_user?.name?.charAt(0)?.toUpperCase() || '?'}</div>
               <div>
-                <p className="thread-name">{thread.other_user.name}</p>
+                <p className="thread-name">{thread.other_user?.name || 'Utilisateur'}</p>
                 <p className="thread-property">{thread.property_title}</p>
               </div>
             </div>

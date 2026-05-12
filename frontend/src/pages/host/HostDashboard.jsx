@@ -14,8 +14,13 @@ export default function HostDashboard() {
       getHostProperties(),
       getHostBookings(),
     ]).then(([propRes, bookRes]) => {
-      setProperties(propRes.data)
-      setBookings(bookRes.data)
+      const propsData = propRes.data
+      const booksData = bookRes.data
+      setProperties(Array.isArray(propsData) ? propsData : (propsData?.results ?? []))
+      setBookings(Array.isArray(booksData) ? booksData : (booksData?.results ?? []))
+    }).catch(() => {
+      setProperties([])
+      setBookings([])
     }).finally(() => setLoading(false))
   }, [])
 

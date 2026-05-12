@@ -27,10 +27,10 @@ export default function AdminDashboard() {
   }
 
   const stats = [
-    { label: 'Utilisateurs totaux', value: analytics?.users?.total, sub: `+${analytics?.users?.new_last_30_days} ce mois` },
-    { label: 'Logements actifs', value: analytics?.properties?.active, sub: `${analytics?.properties?.total} total` },
-    { label: 'Réservations totales', value: analytics?.bookings?.total, sub: `${analytics?.bookings?.recent} récentes` },
-    { label: 'Revenus totaux', value: `${analytics?.revenue?.total?.toFixed(0)} €`, sub: 'Réservations confirmées', isPrice: true },
+    { label: 'Utilisateurs totaux', value: analytics?.users?.total ?? '—', sub: analytics?.users?.new_last_30_days != null ? `+${analytics.users.new_last_30_days} ce mois` : '' },
+    { label: 'Logements actifs', value: analytics?.properties?.active ?? '—', sub: analytics?.properties?.total != null ? `${analytics.properties.total} total` : '' },
+    { label: 'Réservations totales', value: analytics?.bookings?.total ?? '—', sub: analytics?.bookings?.recent != null ? `${analytics.bookings.recent} récentes` : '' },
+    { label: 'Revenus totaux', value: analytics?.revenue?.total != null ? `${analytics.revenue.total.toFixed(0)} €` : '—', sub: 'Réservations confirmées', isPrice: true },
   ]
 
   return (

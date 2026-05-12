@@ -40,7 +40,7 @@ def conversations_list(request):
             'unread_count': unread,
         })
 
-    result.sort(key=lambda x: x['last_message_at'] or '', reverse=True)
+    result.sort(key=lambda x: str(x['last_message_at'] or ''), reverse=True)
     return Response(result)
 
 

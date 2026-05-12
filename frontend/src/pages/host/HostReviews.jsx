@@ -166,7 +166,7 @@ export default function HostReviews() {
                 <div className="host-review-header">
                   <div className="host-review-user">
                     <div className="host-review-avatar">
-                      {r.user_name?.charAt(0).toUpperCase()}
+                      {r.user_name?.charAt(0)?.toUpperCase() || '?'}
                     </div>
                     <div>
                       <p className="host-review-name">{r.user_name}</p>

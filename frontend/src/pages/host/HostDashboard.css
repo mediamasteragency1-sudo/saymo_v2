@@ -24,6 +24,7 @@
   font-size: 36px;
   font-weight: 700;
   line-height: 1;
+  color: var(--color-primary);
 }
 
 .stat-label {

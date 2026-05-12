@@ -44,8 +44,9 @@ export default function PropertyDetail() {
       getReviews({ property: id }),
     ]).then(([propRes, revRes]) => {
       setProperty(propRes.data)
-      setReviews(revRes.data)
-    }).finally(() => setLoading(false))
+      const revData = revRes.data
+      setReviews(Array.isArray(revData) ? revData : (revData?.results ?? []))
+    }).catch(() => {}).finally(() => setLoading(false))
 
     if (user) {
       getFavorites().then(({ data }) => {
@@ -83,13 +84,15 @@ export default function PropertyDetail() {
 
   const handleFavorite = async () => {
     if (!user) { navigate('/login'); return }
-    if (favoriteId) {
-      await removeFavorite(favoriteId)
-      setFavoriteId(null)
-    } else {
-      const { data } = await addFavorite(parseInt(id))
-      setFavoriteId(data.id)
-    }
+    try {
+      if (favoriteId) {
+        await removeFavorite(favoriteId)
+        setFavoriteId(null)
+      } else {
+        const { data } = await addFavorite(parseInt(id))
+        setFavoriteId(data.id)
+      }
+    } catch {}
   }
 
   if (loading) return (

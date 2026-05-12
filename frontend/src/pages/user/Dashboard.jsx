@@ -29,7 +29,7 @@ export default function Dashboard() {
       <div className="container">
         <div className="dashboard-header">
           <div>
-            <h1 className="dashboard-title">Bonjour, {user.name.split(' ')[0]}</h1>
+            <h1 className="dashboard-title">Bonjour, {user?.name?.split(' ')?.[0] || 'vous'}</h1>
             <p className="dashboard-subtitle">Voici un aperçu de votre activité</p>
           </div>
           <div className="dashboard-quick-links">
